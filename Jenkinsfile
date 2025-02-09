@@ -44,10 +44,10 @@ pipeline {
 				sh "docker push komaldhote123/insuranceapp-app:latest"
 			}
 		}
-        stage('Deploy to Kubernetes Dev Environment') {
+        stage('Deploy to Ansible Dev Environment') {
             steps {
 		script {
-		sshPublisher(publishers: [sshPublisherDesc(configName: 'Kubernetes', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'kubectl apply -f kubdeploy1.yaml', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '.', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '*.yaml')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+		sshPublisher(publishers: [sshPublisherDesc(configName: 'SA-FEB09-AController', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'ansible-playbook ansible-playbook.yml', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '.', remoteDirectorySDF: false, removePrefix: '', sourceFiles: 'ansible-playbook.yml')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
 		       }
             }
     	}
