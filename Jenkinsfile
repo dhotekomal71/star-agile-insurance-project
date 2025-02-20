@@ -38,39 +38,10 @@ pipeline {
                 sh "docker push komaldhote123/insuranceapp-app:latest"
             }
         }
-        stage('Deploy to Ansible Dev Environment') {
+        stage('Deploy to kubernetes Cluster') {
             steps {
-                script {
-                    sshPublisher(publishers: [
-                        sshPublisherDesc(
-                            configName: 'SA-FEB09-AController', 
-                            transfers: [
-                                sshTransfer(
-                                    cleanRemote: false,
-                                    execCommand: 'ansible-playbook ansible-playbook.yml',
-                                    execTimeout: 120000,
-                                    remoteDirectory: '.',
-                                    sourceFiles: 'ansible-playbook.yml'
-                                )
-                            ]
-                        )
-                    ])
-                }
-            }
-        }
-        stage('Delete Ansible Playbook') {  // New Stage Added Here
-            steps {
-                script {
-                    sshPublisher(publishers: [
-                        sshPublisherDesc(
-                            configName: 'SA-FEB09-AController',
-                            transfers: [
-                                sshTransfer(
-                                    execCommand: 'rm -f /home/devopsadmin/ansible-playbook.yml'
-                                )
-                            ]
-                        )
-                    ])
+                script{
+                   sshPublisher(publishers: [sshPublisherDesc(configName: 'SA-Jan09-KMaster', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'kubectl apply -f kubdeploy1.yaml', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '.', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '*.yaml')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
                 }
             }
         }
